@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CAAASA AI Academy — Module 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --purple-deep: #1F1346;
+  --purple-mid: #2a1a5e;
+  --purple-primary: #5025d1;
+  --purple-bright: #673de6;
+  --purple-light: #ebe4ff;
+  --purple-mist: #f5f2ff;
+  --blue: #357df9;
+  --blue-light: #d5dfff;
+  --gold: #c9a84c;
+  --gold-light: #f5e6b8;
+  --gold-mist: #fdf8ec;
+  --white: #ffffff;
+  --bg: #F8F9FA;
+  --bg-alt: #F1F3F5;
+  --text: #313537;
+  --text-secondary: #6B7280;
+  --text-muted: #9CA3AF;
+  --border: #E5E7EB;
+  --green: #10B981;
+  --green-light: #D1FAE5;
+  --red: #EF4444;
+  --red-light: #FEE2E2;
+  --font-heading: 'Inter', system-ui, sans-serif;
+  --font-body: 'Lato', 'Inter', system-ui, sans-serif;
+  --content-width: 780px;
+  --wide-width: 1080px;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --radius-xs: 6px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-hover: 0 4px 12px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.06);
+  --shadow-elevated: 0 10px 25px rgba(0,0,0,0.1);
+  --transition: 250ms ease;
+  --sidebar-w: 300px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.65;
+  font-size: 17px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* SIDEBAR */
+.sidebar {
+  position: fixed; top: 0; left: 0;
+  width: var(--sidebar-w); height: 100vh;
+  background: linear-gradient(180deg, var(--purple-deep) 0%, #1a0f3e 100%);
+  z-index: 100; display: flex; flex-direction: column;
+  transition: transform 0.3s ease;
+}
+.sb-brand { padding: 32px 28px 24px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+.sb-brand .eyebrow {
+  font-family: var(--font-heading); font-size: 11px; font-weight: 700;
+  letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px;
+}
+.sb-brand h2 { font-family: var(--font-heading); font-size: 17px; font-weight: 600; color: #fff; line-height: 1.35; }
+.sb-brand .sub { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 6px; }
+.sb-progress { padding: 16px 28px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+.sb-progress-track { width: 100%; height: 3px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; }
+.sb-progress-fill { height: 100%; width: 0%; border-radius: 3px; background: linear-gradient(90deg, var(--gold), var(--blue)); transition: width 0.6s ease; }
+.sb-progress-text { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 8px; font-family: var(--font-heading); }
+.sb-nav { flex: 1; overflow-y: auto; padding: 16px 0; }
+.sb-nav::-webkit-scrollbar { width: 2px; }
+.sb-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); }
+.nav-link {
+  display: flex; align-items: center; gap: 14px;
+  padding: 11px 28px; text-decoration: none;
+  color: rgba(255,255,255,0.55); font-size: 14px; font-family: var(--font-heading);
+  font-weight: 500; border-left: 3px solid transparent; transition: all var(--transition);
+}
+.nav-link:hover { color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.04); }
+.nav-link.active { color: #fff; background: rgba(255,255,255,0.08); border-left-color: var(--gold); }
+.nav-link .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.2); flex-shrink: 0; transition: background var(--transition); }
+.nav-link.active .dot { background: var(--gold); }
+.nav-link.done .dot { background: var(--green); }
+
+/* MOBILE */
+.mob-header {
+  display: none; position: fixed; top: 0; left: 0; right: 0;
+  height: 56px; background: var(--purple-deep); z-index: 101;
+  align-items: center; padding: 0 16px; gap: 12px;
+}
+.mob-header span { font-family: var(--font-heading); font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); }
+.mob-toggle { background: none; border: none; color: #fff; cursor: pointer; font-size: 22px; padding: 8px; }
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 99; }
+@media(max-width:1024px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .overlay.on { display: block; }
+  .mob-header { display: flex; }
+  .main { margin-left: 0 !important; padding-top: 56px; }
+}
+
+/* MAIN */
+.main { margin-left: var(--sidebar-w); }
+
+/* HERO BANNER */
+.hero-banner {
+  position: relative; width: 100%; min-height: 520px;
+  display: flex; align-items: flex-end; overflow: hidden;
+}
+.hero-banner.tall { min-height: 85vh; }
+.hero-banner img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; transition: transform 8s ease;
+}
+.hero-banner:hover img { transform: scale(1.03); }
+.hero-banner .hero-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(31,19,70,0.92) 0%, rgba(31,19,70,0.5) 45%, rgba(31,19,70,0.15) 100%);
+}
+.hero-banner .hero-content {
+  position: relative; z-index: 2; padding: 60px;
+  max-width: var(--wide-width); width: 100%;
+}
+.hero-banner .hero-eyebrow {
+  font-family: var(--font-heading); font-size: 12px; font-weight: 700;
+  letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px;
+}
+.hero-banner h1 {
+  font-family: var(--font-heading); font-size: 48px; font-weight: 800;
+  color: #fff; line-height: 1.12; letter-spacing: -0.5px; margin-bottom: 16px;
+}
+.hero-banner h1 em { font-style: normal; color: var(--gold); }
+.hero-banner .hero-sub { font-size: 19px; color: rgba(255,255,255,0.8); max-width: 580px; line-height: 1.6; }
+.hero-banner .hero-meta {
+  display: flex; flex-wrap: wrap; gap: 24px; margin-top: 28px;
+  font-size: 14px; color: rgba(255,255,255,0.6); font-family: var(--font-heading);
+}
+
+/* SECTION HERO */
+.section-hero {
+  position: relative; width: 100%; min-height: 360px;
+  display: flex; align-items: flex-end; overflow: hidden;
+}
+.section-hero img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; transition: transform 6s ease;
+}
+.section-hero:hover img { transform: scale(1.02); }
+.section-hero .hero-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(31,19,70,0.9) 0%, rgba(31,19,70,0.35) 55%, transparent 100%);
+}
+.section-hero .hero-content {
+  position: relative; z-index: 2; padding: 48px 60px;
+  max-width: var(--wide-width); width: 100%;
+}
+.section-hero .hero-eyebrow {
+  font-family: var(--font-heading); font-size: 11px; font-weight: 700;
+  letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px;
+}
+.section-hero h2 {
+  font-family: var(--font-heading); font-size: 36px; font-weight: 700;
+  color: #fff; line-height: 1.2;
+}
+.section-hero h2 em { font-style: normal; color: var(--gold); }
+.section-hero .lead { font-size: 17px; color: rgba(255,255,255,0.7); margin-top: 8px; max-width: 520px; }
+
+/* CONTENT BLOCKS */
+.content-section { padding: 64px 60px; max-width: calc(var(--content-width) + 120px); margin: 0 auto; }
+.content-section.wide { max-width: calc(var(--wide-width) + 120px); }
+.content-section.bg-white { background: var(--white); }
+.content-section.bg-alt { background: var(--bg-alt); }
+.content-section.bg-purple-mist { background: var(--purple-mist); }
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* TYPOGRAPHY */
+h3 { font-family: var(--font-heading); font-size: 26px; font-weight: 700; color: var(--purple-deep); line-height: 1.25; margin-bottom: 12px; }
+h4 { font-family: var(--font-heading); font-size: 18px; font-weight: 700; color: var(--text); line-height: 1.35; margin-bottom: 8px; }
+.lead-text { font-size: 18px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 32px; max-width: 640px; }
+p + p { margin-top: 16px; }
+
+/* STATEMENT */
+.statement { text-align: center; padding: 72px 60px; max-width: 860px; margin: 0 auto; }
+.statement .text { font-family: var(--font-heading); font-size: 28px; font-weight: 600; color: var(--purple-deep); line-height: 1.45; }
+.statement .text em { font-style: normal; color: var(--gold); font-weight: 700; }
+.statement .attr { font-size: 14px; color: var(--text-muted); margin-top: 16px; font-family: var(--font-heading); }
+
+/* CARDS */
+.card { background: var(--white); border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow); transition: box-shadow var(--transition), transform var(--transition); }
+.card:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+.cards { display: grid; gap: 20px; }
+.cards.c2 { grid-template-columns: repeat(2, 1fr); }
+.cards.c3 { grid-template-columns: repeat(3, 1fr); }
+.cards.c4 { grid-template-columns: repeat(4, 1fr); }
+@media(max-width:768px) { .cards.c2, .cards.c3, .cards.c4 { grid-template-columns: 1fr; } }
+
+/* STAT CARDS */
+.stat-card { background: var(--white); border-radius: var(--radius); padding: 32px 24px; text-align: center; box-shadow: var(--shadow); }
+.stat-card .num { font-family: var(--font-heading); font-size: 42px; font-weight: 800; color: var(--purple-bright); line-height: 1; }
+.stat-card .label { font-size: 14px; color: var(--text-muted); font-weight: 500; margin-top: 4px; font-family: var(--font-heading); }
+
+/* CALLOUT */
+.callout { padding: 24px 28px; border-radius: var(--radius-sm); margin: 28px 0; border-left: 4px solid; position: relative; }
+.callout.purple { background: var(--purple-mist); border-color: var(--purple-bright); }
+.callout.gold { background: var(--gold-mist); border-color: var(--gold); }
+.callout.blue { background: #EFF6FF; border-color: var(--blue); }
+.callout.green { background: var(--green-light); border-color: var(--green); }
+.callout.red { background: var(--red-light); border-color: var(--red); }
+.callout .callout-title { font-family: var(--font-heading); font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+.callout.purple .callout-title { color: var(--purple-bright); }
+.callout.gold .callout-title { color: #8a6f2c; }
+.callout.blue .callout-title { color: var(--blue); }
+.callout.green .callout-title { color: #059669; }
+.callout.red .callout-title { color: var(--red); }
+.callout p { font-size: 15px; line-height: 1.7; }
+
+/* CAROUSEL */
+.carousel-wrap { position: relative; margin: 32px 0; overflow: hidden; }
+.carousel-track { display: flex; transition: transform 0.5s ease; }
+.carousel-slide {
+  min-width: 100%; display: flex; gap: 0;
+  background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow-hover); overflow: hidden;
+}
+.carousel-slide .slide-img { width: 45%; min-height: 320px; object-fit: cover; }
+.carousel-slide .slide-content { flex: 1; padding: 36px 40px; display: flex; flex-direction: column; justify-content: center; }
+.carousel-slide .slide-num {
+  font-family: var(--font-heading); font-size: 12px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px;
+}
+.carousel-slide .slide-title { font-family: var(--font-heading); font-size: 22px; font-weight: 700; color: var(--purple-deep); margin-bottom: 12px; line-height: 1.3; }
+.carousel-slide .slide-text { font-size: 15px; color: var(--text-secondary); line-height: 1.7; }
+.carousel-slide .slide-tag {
+  display: inline-block; margin-top: 16px; padding: 4px 14px;
+  background: var(--purple-light); color: var(--purple-bright);
+  font-family: var(--font-heading); font-size: 12px; font-weight: 600;
+  border-radius: 100px;
+}
+.carousel-nav {
+  display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 20px;
+}
+.carousel-btn {
+  width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--purple-bright);
+  background: var(--white); color: var(--purple-bright); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; transition: all var(--transition);
+}
+.carousel-btn:hover { background: var(--purple-bright); color: #fff; }
+.carousel-dots { display: flex; gap: 8px; }
+.carousel-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--border); cursor: pointer; transition: all var(--transition);
+}
+.carousel-dot.active { background: var(--purple-bright); transform: scale(1.2); }
+@media(max-width:768px) {
+  .carousel-slide { flex-direction: column; }
+  .carousel-slide .slide-img { width: 100%; min-height: 200px; }
+}
+
+/* QUIZ */
+.quiz { background: var(--white); border-radius: var(--radius); padding: 36px; box-shadow: var(--shadow); margin: 36px 0; border: 1px solid var(--border); }
+.quiz .quiz-badge { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-heading); font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--purple-bright); background: var(--purple-light); padding: 4px 12px; border-radius: 100px; margin-bottom: 16px; }
+.quiz .question { font-family: var(--font-heading); font-size: 20px; font-weight: 600; color: var(--text); margin-bottom: 20px; line-height: 1.45; }
+.quiz .options { display: flex; flex-direction: column; gap: 10px; }
+.quiz .opt { display: flex; align-items: center; gap: 14px; padding: 14px 18px; border: 2px solid var(--border); border-radius: var(--radius-sm); cursor: pointer; transition: all var(--transition); font-size: 16px; color: var(--text); }
+.quiz .opt:hover { border-color: var(--purple-bright); background: var(--purple-mist); }
+.quiz .opt .circle { flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--border); transition: all var(--transition); }
+.quiz .opt.selected { border-color: var(--purple-bright); background: var(--purple-mist); }
+.quiz .opt.selected .circle { border-color: var(--purple-bright); background: var(--purple-bright); }
+.quiz .opt.correct { border-color: var(--green); background: var(--green-light); }
+.quiz .opt.correct .circle { border-color: var(--green); background: var(--green); }
+.quiz .opt.wrong { border-color: var(--red); background: var(--red-light); }
+.quiz .opt.locked { pointer-events: none; }
+.quiz .feedback { margin-top: 18px; padding: 16px 20px; border-radius: var(--radius-sm); font-size: 15px; line-height: 1.65; display: none; }
+.quiz .feedback.ok { background: var(--green-light); color: #065F46; display: block; }
+.quiz .feedback.no { background: var(--red-light); color: #991B1B; display: block; }
+
+/* COMPARE */
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 32px 0; }
+@media(max-width:768px) { .compare { grid-template-columns: 1fr; } }
+.compare-col { background: var(--white); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+.compare-col .head { padding: 12px 20px; font-family: var(--font-heading); font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; text-align: center; }
+.compare-col.before .head { background: #FEF2F2; color: var(--red); }
+.compare-col.after .head { background: var(--green-light); color: #059669; }
+.compare-col .body { padding: 20px; font-size: 15px; line-height: 1.7; color: var(--text-secondary); }
+
+/* DND */
+.dnd { margin: 28px 0; }
+.dnd-hint { font-size: 14px; color: var(--text-muted); margin-bottom: 16px; font-style: italic; }
+.dnd-pool { display: flex; flex-wrap: wrap; gap: 8px; min-height: 56px; padding: 16px; background: var(--bg-alt); border-radius: var(--radius-sm); border: 2px dashed var(--border); margin-bottom: 24px; }
+.dnd-chip { display: inline-flex; align-items: center; padding: 8px 16px; background: var(--white); border: 1px solid var(--border); border-radius: 100px; font-size: 14px; font-weight: 500; color: var(--text); cursor: grab; user-select: none; transition: all var(--transition); box-shadow: var(--shadow); }
+.dnd-chip:active { cursor: grabbing; transform: scale(1.04); box-shadow: var(--shadow-elevated); }
+.dnd-chip.right { background: var(--green-light); border-color: var(--green); color: #065F46; cursor: default; }
+.dnd-chip.wrong { background: var(--red-light); border-color: var(--red); color: #991B1B; animation: shake 0.4s; }
+@keyframes shake { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+.dnd-zones { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media(max-width:768px) { .dnd-zones { grid-template-columns: 1fr; } }
+.dnd-zone { border: 2px dashed var(--border); border-radius: var(--radius); min-height: 160px; padding: 16px; transition: all var(--transition); }
+.dnd-zone.over { border-color: var(--purple-bright); background: var(--purple-mist); }
+.dnd-zone .zone-label { font-family: var(--font-heading); font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 8px 14px; border-radius: var(--radius-xs); margin-bottom: 10px; text-align: center; }
+.dnd-zone.lit .zone-label { background: var(--blue-light); color: var(--blue); }
+.dnd-zone.comp .zone-label { background: var(--purple-light); color: var(--purple-bright); }
+.dnd-zone .zone-items { display: flex; flex-wrap: wrap; gap: 6px; min-height: 60px; }
+.dnd-btn { margin-top: 16px; padding: 12px 28px; background: var(--purple-bright); color: #fff; border: none; border-radius: var(--radius-sm); font-family: var(--font-heading); font-size: 15px; font-weight: 600; cursor: pointer; transition: all var(--transition); }
+.dnd-btn:hover { background: var(--purple-primary); transform: translateY(-1px); box-shadow: var(--shadow-hover); }
+.dnd-result { margin-top: 14px; padding: 14px 20px; border-radius: var(--radius-sm); font-size: 15px; display: none; }
+
+/* BAR CHART */
+.bars { margin: 28px 0; display: flex; flex-direction: column; gap: 14px; }
+.bar-row { display: flex; align-items: center; gap: 14px; }
+.bar-label { width: 170px; flex-shrink: 0; font-family: var(--font-heading); font-size: 13px; font-weight: 500; color: var(--text-secondary); text-align: right; }
+.bar-track { flex: 1; height: 32px; background: var(--bg-alt); border-radius: var(--radius-xs); overflow: hidden; }
+.bar-fill { height: 100%; border-radius: var(--radius-xs); display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; font-family: var(--font-heading); font-size: 13px; font-weight: 700; color: #fff; width: 0%; transition: width 1.5s cubic-bezier(0.4,0,0.2,1); }
+.bar-fill.pur { background: linear-gradient(90deg, var(--purple-primary), var(--purple-bright)); }
+.bar-fill.red { background: linear-gradient(90deg, #F87171, var(--red)); }
+.bar-fill.gld { background: linear-gradient(90deg, var(--gold), #D4AF5A); }
+
+/* ASSESSMENT */
+.assess-cat { margin: 24px 0; background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+.assess-cat .cat-head { padding: 14px 24px; background: var(--purple-deep); color: #fff; font-family: var(--font-heading); font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+.assess-q { padding: 14px 24px; border-bottom: 1px solid var(--bg-alt); display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.assess-q:last-child { border-bottom: none; }
+.assess-q .q-text { font-size: 15px; color: var(--text-secondary); flex: 1; }
+.assess-q .scale { display: flex; gap: 6px; flex-shrink: 0; }
+.scale-dot { width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--border); background: var(--white); font-family: var(--font-heading); font-size: 14px; font-weight: 700; color: var(--text-muted); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all var(--transition); }
+.scale-dot:hover { border-color: var(--purple-bright); color: var(--purple-bright); }
+.scale-dot.on { background: var(--purple-bright); border-color: var(--purple-bright); color: #fff; }
+.assess-result { margin: 28px 0; padding: 40px; text-align: center; background: linear-gradient(135deg, var(--purple-deep), var(--purple-primary)); border-radius: var(--radius); color: #fff; display: none; }
+.assess-result .score { font-family: var(--font-heading); font-size: 52px; font-weight: 800; }
+.assess-result .of { font-size: 14px; color: rgba(255,255,255,0.6); }
+.assess-result .level { display: inline-block; margin-top: 12px; padding: 6px 20px; background: rgba(255,255,255,0.15); border-radius: 100px; font-family: var(--font-heading); font-size: 15px; font-weight: 600; }
+
+/* CHECKLIST */
+.checklist { margin: 24px 0; }
+.check-item { display: flex; align-items: flex-start; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--bg-alt); cursor: pointer; }
+.check-item:last-child { border-bottom: none; }
+.check-box { flex-shrink: 0; width: 24px; height: 24px; border-radius: var(--radius-xs); border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; transition: all var(--transition); margin-top: 2px; }
+.check-item.on .check-box { background: var(--green); border-color: var(--green); }
+.check-item.on .check-box::after { content: '\2713'; color: #fff; font-size: 14px; font-weight: 700; }
+.check-item.on .check-text { text-decoration: line-through; color: var(--text-muted); }
+.check-text { font-size: 16px; color: var(--text); line-height: 1.5; }
+
+/* REFLECT */
+.reflect { background: var(--white); border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow); margin: 28px 0; }
+.reflect h4 { color: var(--purple-deep); }
+.reflect textarea { width: 100%; min-height: 100px; padding: 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-family: var(--font-body); font-size: 15px; line-height: 1.6; resize: vertical; margin-top: 10px; transition: border-color var(--transition); }
+.reflect textarea:focus { outline: none; border-color: var(--purple-bright); }
+
+/* COMPLETION */
+.completion { background: linear-gradient(135deg, var(--purple-deep) 0%, var(--purple-primary) 50%, var(--blue) 100%); border-radius: var(--radius); padding: 48px; text-align: center; color: #fff; margin: 36px 0; }
+.completion h3 { color: #fff; font-size: 28px; margin-bottom: 8px; }
+.completion p { color: rgba(255,255,255,0.8); font-size: 17px; max-width: 500px; margin: 0 auto; }
+
+/* TOOL CARDS */
+.tool-card { background: var(--white); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); transition: all var(--transition); border-top: 4px solid transparent; }
+.tool-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+.tool-card.microsoft { border-top-color: var(--blue); }
+.tool-card.google { border-top-color: var(--green); }
+.tool-card.openai { border-top-color: var(--purple-bright); }
+.tool-card .icon { width: 44px; height: 44px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 14px; }
+.tool-card.microsoft .icon { background: var(--blue-light); }
+.tool-card.google .icon { background: var(--green-light); }
+.tool-card.openai .icon { background: var(--purple-light); }
+.tool-card h4 { font-size: 16px; margin-bottom: 6px; }
+.tool-card p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+
+/* TASK AUDIT TABLE */
+.audit-table { width: 100%; border-collapse: separate; border-spacing: 0; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); margin: 24px 0; }
+.audit-table th { background: var(--purple-deep); color: #fff; padding: 14px 16px; font-family: var(--font-heading); font-size: 13px; font-weight: 600; text-align: left; letter-spacing: 0.5px; }
+.audit-table td { padding: 12px 16px; border-bottom: 1px solid var(--bg-alt); font-size: 14px; color: var(--text-secondary); }
+.audit-table tr:last-child td { border-bottom: none; }
+.audit-table tr:nth-child(even) td { background: var(--purple-mist); }
+.audit-table input[type="text"], .audit-table select {
+  width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: var(--radius-xs);
+  font-family: var(--font-body); font-size: 14px; background: var(--white); transition: border-color var(--transition);
+}
+.audit-table input:focus, .audit-table select:focus { outline: none; border-color: var(--purple-bright); }
+
+/* GBB (Good Better Best) */
+.gbb-tabs { display: flex; gap: 4px; margin-bottom: 0; }
+.gbb-tab {
+  flex: 1; padding: 14px 16px; text-align: center; cursor: pointer;
+  font-family: var(--font-heading); font-size: 14px; font-weight: 600;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  transition: all var(--transition); border: 2px solid var(--border); border-bottom: none;
+  background: var(--bg-alt); color: var(--text-muted);
+}
+.gbb-tab.active-good { background: var(--gold-mist); border-color: var(--gold); color: #8a6f2c; }
+.gbb-tab.active-better { background: var(--purple-mist); border-color: var(--purple-bright); color: var(--purple-bright); }
+.gbb-tab.active-best { background: var(--green-light); border-color: var(--green); color: #059669; }
+.gbb-panel {
+  display: none; padding: 28px; border: 2px solid var(--border);
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm); background: var(--white);
+}
+.gbb-panel.show { display: block; }
+.gbb-panel.show-good { border-color: var(--gold); }
+.gbb-panel.show-better { border-color: var(--purple-bright); }
+.gbb-panel.show-best { border-color: var(--green); }
+.gbb-panel textarea {
+  width: 100%; min-height: 80px; padding: 14px; border: 1px solid var(--border);
+  border-radius: var(--radius-sm); font-family: var(--font-body); font-size: 15px;
+  line-height: 1.6; resize: vertical; margin-top: 10px; transition: border-color var(--transition);
+}
+.gbb-panel textarea:focus { outline: none; border-color: var(--purple-bright); }
+
+/* FRAMEWORK BANNER */
+.framework-banner {
+  background: linear-gradient(135deg, var(--purple-deep) 0%, var(--purple-primary) 100%);
+  border-radius: var(--radius); padding: 48px; margin: 36px 0; color: #fff;
+}
+.framework-banner h3 { color: #fff; text-align: center; margin-bottom: 32px; }
+.framework-steps { display: flex; gap: 0; align-items: stretch; }
+.framework-step {
+  flex: 1; text-align: center; padding: 24px 16px; position: relative;
+}
+.framework-step .step-icon {
+  width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 16px;
+  display: flex; align-items: center; justify-content: center; font-size: 28px;
+}
+.framework-step:nth-child(1) .step-icon { background: rgba(201,168,76,0.2); border: 2px solid var(--gold); }
+.framework-step:nth-child(2) .step-icon { background: rgba(53,125,249,0.2); border: 2px solid var(--blue); }
+.framework-step:nth-child(3) .step-icon { background: rgba(16,185,129,0.2); border: 2px solid var(--green); }
+.framework-step .step-label { font-family: var(--font-heading); font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+.framework-step:nth-child(1) .step-label { color: var(--gold); }
+.framework-step:nth-child(2) .step-label { color: var(--blue-light); }
+.framework-step:nth-child(3) .step-label { color: var(--green); }
+.framework-step .step-title { font-family: var(--font-heading); font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+.framework-step .step-desc { font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.6; }
+.framework-step .step-where { font-size: 12px; color: rgba(255,255,255,0.45); margin-top: 12px; font-family: var(--font-heading); font-weight: 600; letter-spacing: 1px; }
+.framework-arrow {
+  display: flex; align-items: center; color: rgba(255,255,255,0.3); font-size: 28px; padding: 0 4px;
+}
+@media(max-width:768px) {
+  .framework-steps { flex-direction: column; gap: 16px; }
+  .framework-arrow { justify-content: center; transform: rotate(90deg); }
+  .hero-banner { min-height: 400px; }
+  .hero-banner.tall { min-height: 70vh; }
+  .hero-banner .hero-content, .section-hero .hero-content { padding: 32px 24px; }
+  .hero-banner h1 { font-size: 32px; }
+  .section-hero h2 { font-size: 28px; }
+  .content-section { padding: 40px 24px; }
+  .statement { padding: 48px 24px; }
+  .statement .text { font-size: 22px; }
+  .bar-label { width: 110px; font-size: 11px; }
+  .assess-q { flex-direction: column; align-items: flex-start; }
+}
+
+/* FOOTER */
+.footer { text-align: center; padding: 40px 60px; color: var(--text-muted); font-size: 13px; border-top: 1px solid var(--border); }
+.footer a { color: var(--purple-bright); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<div class="mob-header">
+  <button class="mob-toggle" onclick="toggleSidebar()">&#9776;</button>
+  <span>CAAASA AI Academy</span>
+</div>
+<div class="overlay" onclick="toggleSidebar()"></div>
+
+<nav class="sidebar" id="sidebar">
+  <div class="sb-brand">
+    <div class="eyebrow">CAAASA AI Academy</div>
+    <h2>Education 4.0 &amp; The AI Management Mindset</h2>
+    <div class="sub">Module 1 &middot; Pre-Work</div>
+  </div>
+  <div class="sb-progress">
+    <div class="sb-progress-track"><div class="sb-progress-fill" id="pFill"></div></div>
+    <div class="sb-progress-text"><span id="pText">0</span>% Complete</div>
+  </div>
+  <div class="sb-nav" id="sbNav">
+    <a class="nav-link active" href="#welcome" data-s="welcome"><span class="dot"></span>Welcome</a>
+    <a class="nav-link" href="#lesson1" data-s="lesson1"><span class="dot"></span>Education 4.0</a>
+    <a class="nav-link" href="#lesson2" data-s="lesson2"><span class="dot"></span>AI Competency</a>
+    <a class="nav-link" href="#lesson3" data-s="lesson3"><span class="dot"></span>Why 80% Abandon AI</a>
+    <a class="nav-link" href="#lesson4" data-s="lesson4"><span class="dot"></span>Context Assembly</a>
+    <a class="nav-link" href="#lesson5" data-s="lesson5"><span class="dot"></span>Your AI Ecosystem</a>
+    <a class="nav-link" href="#lesson6" data-s="lesson6"><span class="dot"></span>Infrastructure Assessment</a>
+    <a class="nav-link" href="#closing" data-s="closing"><span class="dot"></span>Prepare for Session 1</a>
+  </div>
+</nav>
+
+<div class="main">
+
+<!-- ======= WELCOME HERO ======= -->
+<div class="hero-banner tall" id="welcome">
+  <img src="images/hero_welcome.png" alt="Educator walking through modern school">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Module 1 &middot; Self-Paced Pre-Work</div>
+    <h1>Education 4.0 &amp; The <em>AI Management Mindset</em></h1>
+    <p class="hero-sub">You already use AI. This module will transform how you <em>manage</em> it &mdash; shifting from isolated tool use to systematic, visible leadership that drives 60&ndash;80% staff adoption without a single mandate.</p>
+    <div class="hero-meta">
+      <span>45&ndash;60 minutes</span>
+      <span>6 interactive lessons</span>
+      <span>Self-assessment included</span>
+    </div>
+  </div>
+</div>
+
+<div class="content-section reveal">
+  <div class="cards c3">
+    <div class="stat-card"><div class="num">7</div><div class="label">Live Sessions</div></div>
+    <div class="stat-card"><div class="num">~28</div><div class="label">Total Hours</div></div>
+    <div class="stat-card"><div class="num">7</div><div class="label">Real Deliverables</div></div>
+  </div>
+  <div class="callout gold" style="margin-top:32px;">
+    <div class="callout-title">How This Works &mdash; The Flipped Model</div>
+    <p>This institute uses a <strong>flipped classroom</strong> approach. Complete this module <strong>before Session 1</strong>. During the live session, you&rsquo;ll apply what you learned to real work. The goal: walk out with something you can use with staff <em>this week</em>.</p>
+  </div>
+
+  <!-- Educate > Employ > Empower Framework -->
+  <div class="framework-banner">
+    <h3>Our Learning Framework</h3>
+    <div class="framework-steps">
+      <div class="framework-step">
+        <div class="step-icon">&#128218;</div>
+        <div class="step-label">Phase 1</div>
+        <div class="step-title">Educate</div>
+        <div class="step-desc">Build foundational knowledge through self-paced learning. Understand the why, the what, and the frameworks.</div>
+        <div class="step-where">&#8592; You are here (this module)</div>
+      </div>
+      <div class="framework-arrow">&#10132;</div>
+      <div class="framework-step">
+        <div class="step-icon">&#128736;</div>
+        <div class="step-label">Phase 2</div>
+        <div class="step-title">Employ</div>
+        <div class="step-desc">Plan, create, make, deploy. Apply skills to real problems of practice in live sessions.</div>
+        <div class="step-where">Live workshops + pre-work activities</div>
+      </div>
+      <div class="framework-arrow">&#10132;</div>
+      <div class="framework-step">
+        <div class="step-icon">&#127775;</div>
+        <div class="step-label">Phase 3</div>
+        <div class="step-title">Empower</div>
+        <div class="step-desc">Take ownership. Lead AI transformation at your site. Build staff capacity through visible modeling.</div>
+        <div class="step-where">Ongoing site implementation</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout purple">
+    <div class="callout-title">Your Learning Objective</div>
+    <p>By the end of this module, you will shift from a <strong>tool-user mindset</strong> to an <strong>AI-manager mindset</strong> &mdash; identifying high-value AI use cases in your current role and understanding how to produce AI-managed work products that are indistinguishable from your best human work.</p>
+  </div>
+</div>
+
+<div class="statement reveal" style="background:var(--white);">
+  <div class="text">&ldquo;The Fourth Industrial Revolution isn&rsquo;t coming &mdash; <em>it&rsquo;s here.</em> And the educators who learn to manage AI, not just use it, will define what education becomes next.&rdquo;</div>
+  <div class="attr">&mdash; CAAASA AI Academy Philosophy</div>
+</div>
+
+<!-- ======= LESSON 1: Education 4.0 ======= -->
+<div class="section-hero" id="lesson1">
+  <img src="images/hero_education40.png" alt="Education 4.0 futuristic classroom">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Lesson 1</div>
+    <h2>Education 4.0: Why <em>This Matters Now</em></h2>
+    <p class="lead">The World Economic Forum has identified 8 critical shifts that education must make. As an educator, you are the architect of this transformation.</p>
+  </div>
+</div>
+
+<div class="content-section reveal">
+  <h3>The Evolution of Education</h3>
+  <p class="lead-text">Each industrial revolution demanded a fundamentally different approach to education. Understanding where we&rsquo;ve been helps us see where we must go &mdash; and why we can&rsquo;t skip steps.</p>
+  <div class="cards c2">
+    <div class="card" style="border-left:4px solid var(--text-muted);opacity:0.75;">
+      <h4 style="color:var(--text-muted);">Education 1.0 &mdash; Teacher at the Front</h4>
+      <p style="font-size:15px;color:var(--text-secondary);">The industrial-era model. Teacher as sole knowledge authority, students as passive recipients. Rote memorization, standardized content delivery. This model served factory-era workforce needs but treated students as uniform products on an assembly line.</p>
+      <p style="font-size:12px;color:var(--text-muted);margin-top:8px;font-family:var(--font-heading);">1st Industrial Revolution &rarr; Through early 1900s</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--blue);opacity:0.85;">
+      <h4 style="color:var(--blue);">Education 2.0 &mdash; Activities, Still Factorized</h4>
+      <p style="font-size:15px;color:var(--text-secondary);">Teachers began adding activities, group work, and varied assessments &mdash; but the fundamental factory model persisted. Standardized testing, age-graded classrooms, and bell schedules still defined the experience. The teacher remained the primary director.</p>
+      <p style="font-size:12px;color:var(--text-muted);margin-top:8px;font-family:var(--font-heading);">2nd Industrial Revolution &rarr; Through the 1970s&ndash;80s</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--green);">
+      <h4 style="color:var(--green);">Education 3.0 &mdash; Teacher as Guide, Inquiry-Based</h4>
+      <p style="font-size:15px;color:var(--text-secondary);">The digital revolution brought a paradigm shift: <strong>inquiry-based learning</strong> places the student at the center. The teacher becomes a guide and facilitator. Technology enables new pedagogies &mdash; but the key shift is <em>how</em> we teach, not just what tools we use. Constructivism, project-based learning, and student agency define this era.</p>
+      <p style="font-size:12px;color:var(--text-muted);margin-top:8px;font-family:var(--font-heading);">3rd Industrial Revolution &rarr; Digital era through present</p>
+    </div>
+    <div class="card" style="border:2px solid var(--purple-bright);background:var(--purple-mist);border-left:4px solid var(--purple-bright);">
+      <h4 style="color:var(--purple-bright);">Education 4.0 &mdash; AI-Augmented, Deeply Personalized</h4>
+      <p style="font-size:15px;color:var(--purple-primary);">Building on inquiry-based foundations, Education 4.0 adds <strong>high-level technical personalization</strong>. AI accelerates and deepens learning experiences. The teacher remains the guide &mdash; but now has AI as a powerful partner. Competency-based progression, real-time adaptation, and AI fluency are woven into everything.</p>
+      <p style="font-size:12px;color:var(--gold);margin-top:8px;font-family:var(--font-heading);font-weight:600;">4th Industrial Revolution &rarr; This is where we&rsquo;re going</p>
+    </div>
+  </div>
+
+  <div class="callout red" style="margin-top:28px;">
+    <div class="callout-title">Critical Warning</div>
+    <p><strong>You cannot jump from Education 3.0 to 4.0.</strong> Countries that have tried &mdash; layering advanced technology onto weak pedagogical foundations &mdash; have failed. As John Hattie&rsquo;s research across 80 million students confirms: <em>technology must not replace solid teaching practices. It must augment them by accelerating and deepening learning experiences.</em> Education 4.0 only works when built on the inquiry-based foundation of 3.0.</p>
+  </div>
+</div>
+
+<div class="content-section bg-white reveal">
+  <h3>The WEF&rsquo;s 8 Critical Shifts</h3>
+  <p class="lead-text">The World Economic Forum identifies 8 shifts that education must make. Navigate through each one.</p>
+
+  <div class="carousel-wrap" id="shiftCarousel">
+    <div class="carousel-track" id="carTrack">
+      <div class="carousel-slide">
+        <img class="slide-img" src="images/carousel_1_global.png" alt="Global citizenship">
+        <div class="slide-content">
+          <div class="slide-num">Shift 1 of 8</div>
+          <div class="slide-title">Global Citizenship Skills</div>
+          <div class="slide-text">Students develop awareness of the wider world and engage as active, empathetic global citizens. <strong>For your site:</strong> AI can rapidly contextualize content across cultural perspectives and translate materials for multilingual communities &mdash; work that used to take weeks happens in hours.</div>
+          <span class="slide-tag">Content Shift</span>
+        </div>
+      </div>
+      <div class="carousel-slide">
+        <img class="slide-img" src="images/carousel_2_innovation.png" alt="Innovation and creativity">
+        <div class="slide-content">
+          <div class="slide-num">Shift 2 of 8</div>
+          <div class="slide-title">Innovation &amp; Creativity Skills</div>
+          <div class="slide-text">Education must cultivate creative problem-solving, not just content recall. When AI can generate any factual answer instantly, the human value shifts to asking better questions and designing novel solutions. This is about developing the uniquely human capacities AI cannot replicate.</div>
+          <span class="slide-tag">Content Shift</span>
+        </div>
+      </div>
+      <div class="carousel-slide">
+        <img class="slide-img" src="images/carousel_3_technology.png" alt="Technology skills">
+        <div class="slide-content">
+          <div class="slide-num">Shift 3 of 8</div>
+          <div class="slide-title">Technology Skills</div>
+          <div class="slide-text">Beyond digital literacy &mdash; students need fluency in AI, data analysis, and computational thinking. This isn&rsquo;t about adding a &ldquo;tech class.&rdquo; It&rsquo;s about embedding AI fluency across all subjects, with technology augmenting the learning experience, not replacing the teacher.</div>
+          <span class="slide-tag">Content Shift</span>
+        </div>
+      </div>
+      <div class="carousel-slide">
+        <img class="slide-img" src="images/carousel_4_interpersonal.png" alt="Interpersonal skills">
+        <div class="slide-content">
+          <div class="slide-num">Shift 4 of 8</div>
+          <div class="slide-title">Interpersonal Skills</div>
+          <div class="slide-text">As AI handles more routine cognitive tasks, the uniquely human skills &mdash; empathy, persuasion, team leadership &mdash; become the differentiators. Educators who use AI for mechanical work can invest more time in relational leadership and developing these critical capacities in students.</div>
+          <span class="slide-tag">Content Shift</span>
+        </div>
+      </div>
+      <div class="carousel-slide">
+        <img class="slide-img" src="images/carousel_5_personalized.png" alt="Personalized learning">
+        <div class="slide-content">
+          <div class="slide-num">Shift 5 of 8</div>
+          <div class="slide-title">Personalized &amp; Self-Paced Learning</div>
+          <div class="slide-text">AI makes true personalization feasible at scale for the first time. Adaptive learning paths, AI-generated differentiated materials, and real-time progress monitoring are no longer aspirational &mdash; they&rsquo;re available. But personalization only works when guided by skilled educators who know their students.</div>
+          <span class="slide-tag">Experience Shift</span>
+        </div>
+      </div>
+      <div class="carousel-slide">
+        <img class="slide-img" src="images/carousel_6_inclusive.png" alt="Inclusive learning">
+        <div class="slide-content">
+          <div class="slide-num">Shift 6 of 8</div>
+          <div class="slide-title">Accessible &amp; Inclusive Learning</div>
+          <div class="slide-text">AI can instantly translate, simplify, or adapt content for English learners, students with IEPs, and advanced learners &mdash; reducing the equity gap in real time. This shift demands that technology serve every student, not just those with existing access and privilege.</div>
+          <span class="slide-tag">Experience Shift</span>
+        </div>
+      </div>
+      <div class="carousel-slide">
+        <img class="slide-img" src="images/carousel_7_problem.png" alt="Problem-based learning">
+        <div class="slide-content">
+          <div class="slide-num">Shift 7 of 8</div>
+          <div class="slide-title">Problem-Based &amp; Collaborative Learning</div>
+          <div class="slide-text">Inquiry-based practices &mdash; the foundation of Education 3.0 &mdash; become supercharged with AI. When educators model problem-based AI use, solving actual challenges with AI, it creates a culture of applied intelligence. Staff sees that AI is practical, not abstract.</div>
+          <span class="slide-tag">Experience Shift</span>
+        </div>
+      </div>
+      <div class="carousel-slide">
+        <img class="slide-img" src="images/carousel_8_lifelong.png" alt="Lifelong learning">
+        <div class="slide-content">
+          <div class="slide-num">Shift 8 of 8</div>
+          <div class="slide-title">Lifelong &amp; Student-Driven Learning</div>
+          <div class="slide-text">By engaging in this AI Academy, you demonstrate that educators are learners first. When staff sees you actively developing new competencies, it normalizes continuous growth for the entire organization. Learning doesn&rsquo;t end with a degree &mdash; it evolves with the world.</div>
+          <span class="slide-tag">Experience Shift</span>
+        </div>
+      </div>
+    </div>
+    <div class="carousel-nav">
+      <button class="carousel-btn" onclick="moveCarousel(-1)">&#8249;</button>
+      <div class="carousel-dots" id="carDots"></div>
+      <button class="carousel-btn" onclick="moveCarousel(1)">&#8250;</button>
+    </div>
+  </div>
+
+  <div class="quiz" id="q1">
+    <div class="quiz-badge">Knowledge Check</div>
+    <div class="question">According to the WEF framework and Hattie&rsquo;s research, what is the most critical requirement for Education 4.0 to succeed?</div>
+    <div class="options">
+      <div class="opt" onclick="checkQ('q1',this,false)"><span class="circle"></span>Purchasing the latest AI tools and platforms for every classroom</div>
+      <div class="opt" onclick="checkQ('q1',this,false)"><span class="circle"></span>Replacing traditional instruction entirely with AI-driven learning</div>
+      <div class="opt" onclick="checkQ('q1',this,true)"><span class="circle"></span>Building on strong inquiry-based teaching practices (Education 3.0) and using AI to augment, not replace, skilled pedagogy</div>
+      <div class="opt" onclick="checkQ('q1',this,false)"><span class="circle"></span>Moving directly from standardized instruction to AI-personalized learning</div>
+    </div>
+    <div class="feedback" id="q1-ok">Exactly. Education 4.0 is built on the foundation of 3.0&rsquo;s inquiry-based practices. Hattie&rsquo;s research confirms technology must augment skilled teaching &mdash; not replace it. Countries that try to skip this step fail.</div>
+    <div class="feedback" id="q1-no">Not quite. The key insight is that Education 4.0 requires a foundation of strong inquiry-based practices (3.0). As Hattie&rsquo;s research shows, technology alone doesn&rsquo;t improve outcomes &mdash; it must augment skilled teaching, not replace it.</div>
+  </div>
+</div>
+
+<!-- ======= LESSON 2: AI Competency ======= -->
+<div class="section-hero" id="lesson2">
+  <img src="images/hero_ai_competency.png" alt="AI Competency" style="object-position: center 20%;">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Lesson 2</div>
+    <h2><em>AI Competency</em></h2>
+    <p class="lead">Most PD stops at literacy. This institute takes you to competency &mdash; and beyond, to management.</p>
+  </div>
+</div>
+
+<div class="content-section reveal">
+  <div class="compare">
+    <div class="compare-col before"><div class="head">AI Literacy (Tool User)</div><div class="body"><ul style="padding-left:18px;"><li style="margin-bottom:8px;">Knows what AI is conceptually</li><li style="margin-bottom:8px;">Can use ChatGPT to answer a question</li><li style="margin-bottom:8px;">Understands basic safety concerns</li><li style="margin-bottom:8px;">Uses AI occasionally for personal tasks</li><li>Treats AI as a search engine replacement</li></ul></div></div>
+    <div class="compare-col after"><div class="head">AI Competency (AI Manager)</div><div class="body"><ul style="padding-left:18px;"><li style="margin-bottom:8px;">Directs AI with precise context and constraints</li><li style="margin-bottom:8px;">Produces work indistinguishable from expert human work</li><li style="margin-bottom:8px;">Builds repeatable AI workflows</li><li style="margin-bottom:8px;">Uses AI visibly, driving organic adoption</li><li>Treats AI as a managed team member</li></ul></div></div>
+  </div>
+</div>
+
+<div class="content-section bg-white reveal">
+  <h3>The Three Levels of AI Engagement</h3>
+  <div class="cards c3" style="margin-top:20px;">
+    <div class="card" style="border-top:4px solid var(--border);opacity:0.7;"><h4 style="color:var(--text-muted);">Level 1: Awareness</h4><p style="font-size:15px;color:var(--text-muted);">&ldquo;I know AI exists and I&rsquo;ve tried it.&rdquo;</p></div>
+    <div class="card" style="border-top:4px solid var(--blue);"><h4 style="color:var(--blue);">Level 2: Application</h4><p style="font-size:15px;color:var(--text-secondary);">&ldquo;I use AI regularly for specific tasks.&rdquo;</p></div>
+    <div class="card" style="border-top:4px solid var(--purple-bright);background:var(--purple-mist);"><h4 style="color:var(--purple-bright);">Level 3: Management</h4><p style="font-size:15px;color:var(--purple-primary);">&ldquo;I direct AI as a managed resource that produces professional-quality work.&rdquo;</p><p style="font-size:13px;color:var(--gold);margin-top:8px;font-weight:700;font-family:var(--font-heading);">This is where we&rsquo;re going.</p></div>
+  </div>
+</div>
+
+<div class="content-section reveal">
+  <h3>Activity: Sort These Tasks</h3>
+  <p style="margin-bottom:16px;color:var(--text-secondary);">Understanding the difference between literacy and competency is essential. Sort these real tasks into the right category.</p>
+  <div class="dnd" id="dndAct">
+    <p class="dnd-hint">Drag each task into the correct category.</p>
+    <div class="dnd-pool" id="dndSrc">
+      <div class="dnd-chip" draggable="true" data-a="lit" id="c1">Explaining how ChatGPT works</div>
+      <div class="dnd-chip" draggable="true" data-a="comp" id="c2">Writing a 3-paragraph prompt with role &amp; format</div>
+      <div class="dnd-chip" draggable="true" data-a="lit" id="c3">Knowing AI can have bias</div>
+      <div class="dnd-chip" draggable="true" data-a="comp" id="c4">Creating reusable AI templates</div>
+      <div class="dnd-chip" draggable="true" data-a="comp" id="c5">Iterating until output matches your voice</div>
+      <div class="dnd-chip" draggable="true" data-a="lit" id="c6">Understanding GPT-4 vs Gemini differences</div>
+      <div class="dnd-chip" draggable="true" data-a="comp" id="c7">Building a workflow saving 4 hours/week</div>
+      <div class="dnd-chip" draggable="true" data-a="lit" id="c8">Reading an article about AI in education</div>
+    </div>
+    <div class="dnd-zones">
+      <div class="dnd-zone lit" id="zLit" ondragover="event.preventDefault();this.classList.add('over')" ondragleave="this.classList.remove('over')" ondrop="doDrop(event,'lit')"><div class="zone-label">AI Literacy</div><div class="zone-items"></div></div>
+      <div class="dnd-zone comp" id="zComp" ondragover="event.preventDefault();this.classList.add('over')" ondragleave="this.classList.remove('over')" ondrop="doDrop(event,'comp')"><div class="zone-label">AI Competency</div><div class="zone-items"></div></div>
+    </div>
+    <button class="dnd-btn" onclick="checkDnd()">Check My Answers</button>
+    <div class="dnd-result" id="dndRes"></div>
+  </div>
+</div>
+
+<!-- ======= LESSON 3: Why 80% Abandon AI ======= -->
+<div class="section-hero" id="lesson3">
+  <img src="images/hero_adoption.png" alt="AI training workshop with African American trainer">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Lesson 3</div>
+    <h2>Why 80% <em>Abandon AI</em></h2>
+    <p class="lead">Microsoft&rsquo;s research reveals a striking pattern: the majority of early adopters stop within 90 days.</p>
+  </div>
+</div>
+
+<div class="content-section reveal">
+  <h3>The Adoption Cliff</h3>
+  <p class="lead-text">Watch the data tell the story. The drop-off is dramatic &mdash; but the solution is clear.</p>
+  <div class="bars" id="adoptChart">
+    <div class="bar-row"><div class="bar-label">Initial excitement</div><div class="bar-track"><div class="bar-fill pur" data-w="92">92%</div></div></div>
+    <div class="bar-row"><div class="bar-label">Using after 30 days</div><div class="bar-track"><div class="bar-fill pur" data-w="64">64%</div></div></div>
+    <div class="bar-row"><div class="bar-label">Using after 90 days</div><div class="bar-track"><div class="bar-fill red" data-w="30">30%</div></div></div>
+    <div class="bar-row"><div class="bar-label">Integrated into workflow</div><div class="bar-track"><div class="bar-fill red" data-w="18">18%</div></div></div>
+    <div class="bar-row"><div class="bar-label">With management support</div><div class="bar-track"><div class="bar-fill gld" data-w="72">72%</div></div></div>
+  </div>
+  <div class="callout purple" style="margin-top:32px;">
+    <div class="callout-title">The Key Insight</div>
+    <p>The difference between 18% and 72% retention is not better technology. It&rsquo;s <strong>better management</strong>. When educators actively model AI use, retention jumps fourfold.</p>
+  </div>
+</div>
+
+<div class="statement reveal" style="background:var(--white);">
+  <div class="text">&ldquo;Educators don&rsquo;t teach AI to staff. Educators <em>use AI visibly</em> in their actual work. Staff notices. They ask. They try. That&rsquo;s 60&ndash;80% adoption &mdash; without a single mandate.&rdquo;</div>
+  <div class="attr">&mdash; The CAAASA Model</div>
+</div>
+
+<div class="content-section bg-white reveal">
+  <h3>Why People Stop Using AI</h3>
+  <div class="cards c2">
+    <div class="card"><h4 style="color:var(--red);">No Clear Use Case</h4><p style="font-size:15px;color:var(--text-secondary);">&ldquo;I played with it, but I don&rsquo;t know what to use it for in my actual job.&rdquo;</p></div>
+    <div class="card"><h4 style="color:var(--red);">Poor Output Quality</h4><p style="font-size:15px;color:var(--text-secondary);">&ldquo;The AI wrote something generic that didn&rsquo;t sound like me.&rdquo;</p></div>
+    <div class="card"><h4 style="color:var(--red);">No Workflow Integration</h4><p style="font-size:15px;color:var(--text-secondary);">&ldquo;It was an extra step, not a time-saver.&rdquo;</p></div>
+    <div class="card"><h4 style="color:var(--red);">No Visible Leadership</h4><p style="font-size:15px;color:var(--text-secondary);">&ldquo;Nobody else is using it, so why should I?&rdquo;</p></div>
+  </div>
+</div>
+
+<div class="content-section reveal">
+  <h3>Activity: Your Time &amp; Task Audit</h3>
+  <p style="margin-bottom:8px;color:var(--text-secondary);">Think about how you spend your time each week. List your recurring tasks, estimate the time, and identify where AI could have the highest impact. <strong>This is where transformation begins.</strong></p>
+  <table class="audit-table">
+    <thead>
+      <tr>
+        <th style="width:30%;">Recurring Task</th>
+        <th style="width:18%;">Hours/Week</th>
+        <th style="width:18%;">AI Could Help?</th>
+        <th style="width:34%;">How AI Could Help</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><input type="text" placeholder="e.g., Writing parent communications"></td><td><input type="text" placeholder="e.g., 3 hrs"></td><td><select><option value="">Select</option><option>High Impact</option><option>Medium Impact</option><option>Low Impact</option><option>Not Applicable</option></select></td><td><input type="text" placeholder="e.g., Draft templates, personalize at scale"></td></tr>
+      <tr><td><input type="text" placeholder="e.g., Creating board reports"></td><td><input type="text" placeholder="e.g., 5 hrs"></td><td><select><option value="">Select</option><option>High Impact</option><option>Medium Impact</option><option>Low Impact</option><option>Not Applicable</option></select></td><td><input type="text" placeholder="e.g., Data analysis, formatting, summary writing"></td></tr>
+      <tr><td><input type="text" placeholder="e.g., Staff evaluations"></td><td><input type="text" placeholder="e.g., 4 hrs"></td><td><select><option value="">Select</option><option>High Impact</option><option>Medium Impact</option><option>Low Impact</option><option>Not Applicable</option></select></td><td><input type="text" placeholder="e.g., Observation note synthesis, growth area identification"></td></tr>
+      <tr><td><input type="text"></td><td><input type="text"></td><td><select><option value="">Select</option><option>High Impact</option><option>Medium Impact</option><option>Low Impact</option><option>Not Applicable</option></select></td><td><input type="text"></td></tr>
+      <tr><td><input type="text"></td><td><input type="text"></td><td><select><option value="">Select</option><option>High Impact</option><option>Medium Impact</option><option>Low Impact</option><option>Not Applicable</option></select></td><td><input type="text"></td></tr>
+      <tr><td><input type="text"></td><td><input type="text"></td><td><select><option value="">Select</option><option>High Impact</option><option>Medium Impact</option><option>Low Impact</option><option>Not Applicable</option></select></td><td><input type="text"></td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout gold" style="margin-top:24px;">
+    <div class="callout-title">The 80/20 Rule</div>
+    <p>Identify the <strong>20% of your work</strong> that consumes <strong>80% of your time</strong> &mdash; that&rsquo;s where AI delivers the highest ROI. For most educators, it&rsquo;s drafting, data analysis, and communication. Look at your table above: which &ldquo;High Impact&rdquo; tasks represent your 20%?</p>
+  </div>
+
+  <div class="reflect">
+    <h4>Reflection</h4>
+    <p style="font-size:15px;color:var(--text-secondary);">Think about a time you introduced a new tool or process. What made it stick (or not)? How could visible modeling have changed the outcome?</p>
+    <textarea placeholder="Write your reflection here..."></textarea>
+  </div>
+</div>
+
+<!-- ======= LESSON 4: Context Assembly ======= -->
+<div class="section-hero" id="lesson4">
+  <img src="images/hero_context_assembly.png" alt="Educator using Context Assembly">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Lesson 4</div>
+    <h2>Context Assembly: <em>The Core Skill</em></h2>
+    <p class="lead">The single most important skill you&rsquo;ll learn in this institute &mdash; the difference between generic AI output and professional-quality work.</p>
+  </div>
+</div>
+
+<div class="content-section reveal">
+  <h3>The Six Components</h3>
+  <p class="lead-text">When you provide all six, AI output quality jumps dramatically. This is the &ldquo;context&rdquo; that transforms AI from a toy into a tool.</p>
+  <div class="cards c2">
+    <div class="card" style="border-left:4px solid var(--purple-bright);"><h4>Role</h4><p style="font-size:15px;color:var(--text-secondary);">Who should the AI be? &ldquo;You are a veteran superintendent with 20 years in urban districts.&rdquo;</p></div>
+    <div class="card" style="border-left:4px solid var(--blue);"><h4>Audience</h4><p style="font-size:15px;color:var(--text-secondary);">Who will see this? &ldquo;A school board with community members of varied backgrounds.&rdquo;</p></div>
+    <div class="card" style="border-left:4px solid var(--gold);"><h4>Purpose</h4><p style="font-size:15px;color:var(--text-secondary);">What should this accomplish? &ldquo;Build confidence in our AI integration plan.&rdquo;</p></div>
+    <div class="card" style="border-left:4px solid var(--green);"><h4>Constraints</h4><p style="font-size:15px;color:var(--text-secondary);">What are the boundaries? &ldquo;Under 2 pages. Reference our strategic plan.&rdquo;</p></div>
+    <div class="card" style="border-left:4px solid #E879A6;"><h4>Format</h4><p style="font-size:15px;color:var(--text-secondary);">What should it look like? &ldquo;Standard board memo: header block, summary, key points.&rdquo;</p></div>
+    <div class="card" style="border-left:4px solid #F59E0B;"><h4>Exemplars</h4><p style="font-size:15px;color:var(--text-secondary);">Show AI what good looks like. &ldquo;Here&rsquo;s a memo I wrote that was well-received.&rdquo;</p></div>
+  </div>
+</div>
+
+<div class="content-section bg-white reveal">
+  <h3>See the Difference</h3>
+  <div class="compare">
+    <div class="compare-col before"><div class="head">Without Context Assembly</div><div class="body"><p style="font-size:13px;color:var(--text-muted);font-style:italic;margin-bottom:12px;">Prompt: &ldquo;Write a letter to parents about AI.&rdquo;</p><p style="font-size:14px;">&ldquo;Dear Parents, We are excited to announce that our school is embracing AI technology. AI offers many benefits for education...&rdquo;</p><p style="font-size:13px;color:var(--red);margin-top:10px;font-weight:600;">Generic. Could be from any district. Parents delete it.</p></div></div>
+    <div class="compare-col after"><div class="head">With Context Assembly</div><div class="body"><p style="font-size:13px;color:var(--text-muted);font-style:italic;margin-bottom:12px;">Full context: Role + Audience + Purpose + Constraints + Format + Exemplar</p><p style="font-size:14px;">&ldquo;Dear Lincoln Elementary Families, Last month, three 4th graders used an AI reading tool &mdash; and Ms. Rodriguez saw a full grade-level jump in six weeks. Starting in January, we&rsquo;re expanding this...&rdquo;</p><p style="font-size:13px;color:var(--green);margin-top:10px;font-weight:600;">Specific. Personal. Story-driven. Parents read it.</p></div></div>
+  </div>
+</div>
+
+<div class="content-section reveal">
+  <h3>Practice: Good, Better, Best</h3>
+  <p style="margin-bottom:8px;color:var(--text-secondary);">The quality of AI output is directly proportional to the quality of context you provide. Practice building prompts at three levels. Click each tab to see the difference &mdash; then try writing your own.</p>
+
+  <div class="gbb-tabs">
+    <div class="gbb-tab active-good" onclick="showGBB('good')">Good</div>
+    <div class="gbb-tab" onclick="showGBB('better')">Better</div>
+    <div class="gbb-tab" onclick="showGBB('best')">Best</div>
+  </div>
+
+  <div class="gbb-panel show show-good" id="gbbGood">
+    <h4 style="color:#8a6f2c;">Good &mdash; Basic Prompt</h4>
+    <p style="font-size:15px;color:var(--text-secondary);line-height:1.7;">A basic prompt gives AI the task but limited context. You get a generic response.</p>
+    <div class="callout gold" style="margin:16px 0;">
+      <div class="callout-title">Example</div>
+      <p><em>&ldquo;Write a staff memo about our new AI policy.&rdquo;</em></p>
+    </div>
+    <p style="font-size:14px;color:var(--text-muted);">Result: Generic, could apply to any school. Correct in structure but lacks your voice, your context, your community.</p>
+    <h4 style="margin-top:20px;">Your Turn:</h4>
+    <textarea placeholder="Write a 'Good' level prompt for a task you actually need to complete this week..."></textarea>
+  </div>
+
+  <div class="gbb-panel" id="gbbBetter">
+    <h4 style="color:var(--purple-bright);">Better &mdash; Adding Context</h4>
+    <p style="font-size:15px;color:var(--text-secondary);line-height:1.7;">Add role, audience, and purpose. The output becomes noticeably more relevant and targeted.</p>
+    <div class="callout purple" style="margin:16px 0;">
+      <div class="callout-title">Example</div>
+      <p><em>&ldquo;You are a principal at a Title I elementary school. Write a staff memo about our new AI policy. The audience is 45 teachers, many of whom are skeptical about AI. The tone should be warm and encouraging, not technical.&rdquo;</em></p>
+    </div>
+    <p style="font-size:14px;color:var(--text-muted);">Result: More targeted. Acknowledges the audience. Still missing your voice and specific constraints.</p>
+    <h4 style="margin-top:20px;">Your Turn:</h4>
+    <textarea placeholder="Take your 'Good' prompt and add Role, Audience, and Purpose..."></textarea>
+  </div>
+
+  <div class="gbb-panel" id="gbbBest">
+    <h4 style="color:#059669;">Best &mdash; Full Context Assembly</h4>
+    <p style="font-size:15px;color:var(--text-secondary);line-height:1.7;">All six components. The output is indistinguishable from your own expert work &mdash; because the AI now has everything it needs to match your standards.</p>
+    <div class="callout green" style="margin:16px 0;">
+      <div class="callout-title">Example</div>
+      <p><em>&ldquo;You are Dr. Williams, principal at Riverside Elementary (Title I, 520 students, 45 staff). Write a staff memo about our new AI acceptable use policy. Audience: teachers who range from AI-enthusiastic to AI-skeptical. Purpose: build confidence, not compliance. Constraints: under 1 page, reference our strategic plan Goal 3. Format: header block with school logo, 3 bullet key points, personal closing. Exemplar: [paste previous memo they responded well to].&rdquo;</em></p>
+    </div>
+    <p style="font-size:14px;color:var(--text-muted);">Result: Specific to your school, your staff, your voice. Ready to send with minor edits.</p>
+    <h4 style="margin-top:20px;">Your Turn:</h4>
+    <textarea placeholder="Now add Constraints, Format, and an Exemplar reference to make it 'Best'..."></textarea>
+  </div>
+
+  <div class="callout green" style="margin-top:24px;">
+    <div class="callout-title">Key Takeaway</div>
+    <p>The difference between good and best output isn&rsquo;t a better AI &mdash; it&rsquo;s better context. <strong>You will practice Good, Better, Best in Session 1</strong> using a real work product. Come with something you need to create this month.</p>
+  </div>
+</div>
+
+<!-- ======= LESSON 5: Your AI Ecosystem ======= -->
+<div class="section-hero" id="lesson5">
+  <img src="images/hero_tools.png" alt="Educator workspace with AI tools">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Lesson 5</div>
+    <h2>Your AI Ecosystem: <em>What&rsquo;s Already Available</em></h2>
+    <p class="lead">Before exploring new tools, understand the powerful AI already behind your firewall.</p>
+  </div>
+</div>
+
+<div class="content-section reveal">
+  <h3>Start with What You Have</h3>
+  <p class="lead-text">Most districts already have AI capabilities built into their existing platforms. The low-hanging fruit is right in front of you. We&rsquo;ll go deeper into specific tools during our live sessions &mdash; for now, understand the landscape.</p>
+
+  <div class="callout blue" style="margin-bottom:28px;">
+    <div class="callout-title">Reality Check</div>
+    <p><strong>Your staff is already using AI.</strong> Whether you know it or not, teachers and staff are experimenting with ChatGPT, Copilot, and Gemini. The question isn&rsquo;t whether AI enters your building &mdash; it&rsquo;s whether you lead its arrival or react to it. <strong>Banning is not the answer.</strong> Strategic guidance is.</p>
+  </div>
+
+  <h4 style="margin-top:32px;margin-bottom:16px;">Which &ldquo;House&rdquo; Is Your District?</h4>
+  <p style="margin-bottom:20px;color:var(--text-secondary);">The AI tools available to you depend heavily on your existing technology ecosystem. Understanding your &ldquo;house&rdquo; determines your easiest path forward.</p>
+
+  <div class="cards c3">
+    <div class="tool-card microsoft">
+      <div class="icon">&#9634;</div>
+      <h4>Microsoft House</h4>
+      <p><strong>Microsoft Copilot</strong> is essentially ChatGPT &mdash; but it&rsquo;s behind your district firewall with enterprise data protection. If you have Microsoft 365, you likely already have access to Copilot.</p>
+      <p style="margin-top:10px;font-size:13px;color:var(--blue);font-weight:600;">Word, Excel, PowerPoint, Teams, Outlook, Edge</p>
+    </div>
+    <div class="tool-card google">
+      <div class="icon">&#9679;</div>
+      <h4>Google House</h4>
+      <p><strong>Google Gemini</strong> is integrated across Google Workspace. If your district runs on Google, Gemini is available within Docs, Sheets, Slides, and Gmail &mdash; all within your existing data agreements.</p>
+      <p style="margin-top:10px;font-size:13px;color:var(--green);font-weight:600;">Docs, Sheets, Slides, Gmail, Chrome, Classroom</p>
+    </div>
+    <div class="tool-card openai">
+      <div class="icon">&#9672;</div>
+      <h4>OpenAI / ChatGPT</h4>
+      <p><strong>ChatGPT</strong> is the most widely known LLM. Available as a standalone tool or through enterprise plans (ChatGPT Enterprise/Team) that offer data protection. Consider it as a complement to your existing ecosystem.</p>
+      <p style="margin-top:10px;font-size:13px;color:var(--purple-bright);font-weight:600;">ChatGPT, API access, Custom GPTs, DALL-E</p>
+    </div>
+  </div>
+</div>
+
+<div class="content-section bg-white reveal">
+  <h3>Ground Rules for AI Exploration</h3>
+  <p class="lead-text">Before you and your staff go further, establish these baseline expectations. Not to scare anyone &mdash; but to navigate responsibly.</p>
+  <div class="cards c2">
+    <div class="card" style="border-left:4px solid var(--purple-bright);">
+      <h4>Safety &amp; Security First</h4>
+      <p style="font-size:15px;color:var(--text-secondary);">Start with tools <strong>behind your firewall</strong>. Microsoft Copilot and Google Gemini within your enterprise account have built-in data protections. Using the consumer version of ChatGPT requires more caution with student data.</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--red);">
+      <h4>Never Enter Student PII</h4>
+      <p style="font-size:15px;color:var(--text-secondary);">Regardless of the tool, <strong>never enter student names, ID numbers, or personally identifiable information</strong> into any AI system unless it has been formally vetted and approved by your IT department.</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--gold);">
+      <h4>Verify All Output</h4>
+      <p style="font-size:15px;color:var(--text-secondary);">AI generates confident-sounding text that may be inaccurate. <strong>Always verify facts, citations, and data</strong> before sharing AI-generated content. You are the quality control, not the AI.</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--green);">
+      <h4>Guide, Don&rsquo;t Ban</h4>
+      <p style="font-size:15px;color:var(--text-secondary);">Blanket AI bans push usage underground where there are no guardrails. Instead, <strong>create clear guidelines</strong> for appropriate use and model responsible AI engagement yourself.</p>
+    </div>
+  </div>
+</div>
+
+<div class="content-section reveal">
+  <div class="callout gold">
+    <div class="callout-title">The 80/20 Rule</div>
+    <p>Identify the <strong>20% of your work</strong> that consumes <strong>80% of your time</strong> &mdash; that&rsquo;s where AI delivers the highest ROI. For most educators, it&rsquo;s drafting, data analysis, and communication.</p>
+  </div>
+  <div class="reflect">
+    <h4>Reflection</h4>
+    <p style="font-size:15px;color:var(--text-secondary);">If AI could reclaim 30% of your top time-consuming category, what would you do with that time? How would it change your impact as an educator?</p>
+    <textarea placeholder="I would use the reclaimed time to..."></textarea>
+  </div>
+</div>
+
+<!-- ======= LESSON 6: Infrastructure Assessment ======= -->
+<div class="section-hero" id="lesson6">
+  <img src="images/hero_assessment.png" alt="Educators reviewing assessment">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Lesson 6</div>
+    <h2>Site Infrastructure <em>Self-Assessment</em></h2>
+    <p class="lead">Establish your baseline. Understand your ecosystem, your policy landscape, and your readiness. Bring this to Session 1.</p>
+  </div>
+</div>
+
+<div class="content-section reveal">
+  <div class="callout blue" style="margin-bottom:28px;">
+    <div class="callout-title">Scoring Guide</div>
+    <p><strong>1</strong> = Not Started &nbsp;&bull;&nbsp; <strong>2</strong> = Exploring &nbsp;&bull;&nbsp; <strong>3</strong> = Developing &nbsp;&bull;&nbsp; <strong>4</strong> = Implementing &nbsp;&bull;&nbsp; <strong>5</strong> = Optimizing</p>
+  </div>
+
+  <div class="assess-cat"><div class="cat-head"><span>&#128187;</span> Device &amp; Hardware Access</div>
+    <div class="assess-q"><span class="q-text">Staff have reliable access to modern devices</span><div class="scale"><button class="scale-dot" onclick="setS(this)">1</button><button class="scale-dot" onclick="setS(this)">2</button><button class="scale-dot" onclick="setS(this)">3</button><button class="scale-dot" onclick="setS(this)">4</button><button class="scale-dot" onclick="setS(this)">5</button></div></div>
+    <div class="assess-q"><span class="q-text">Students have consistent device access during instruction</span><div class="scale"><button class="scale-dot" onclick="setS(this)">1</button><button class="scale-dot" onclick="setS(this)">2</button><button class="scale-dot" onclick="setS(this)">3</button><button class="scale-dot" onclick="setS(this)">4</button><button class="scale-dot" onclick="setS(this)">5</button></div></div>
+    <div class="assess-q"><span class="q-text">Admin team devices can run AI tools</span><div class="scale"><button class="scale-dot" onclick="setS(this)">1</button><button class="scale-dot" onclick="setS(this)">2</button><button class="scale-dot" onclick="setS(this)">3</button><button class="scale-dot" onclick="setS(this)">4</button><button class="scale-dot" onclick="setS(this)">5</button></div></div>
+  </div>
+
+  <div class="assess-cat"><div class="cat-head"><span>&#128246;</span> Network &amp; Connectivity</div>
+    <div class="assess-q"><span class="q-text">WiFi supports concurrent AI tool use</span><div class="scale"><button class="scale-dot" onclick="setS(this)">1</button><button class="scale-dot" onclick="setS(this)">2</button><button class="scale-dot" onclick="setS(this)">3</button><button class="scale-dot" onclick="setS(this)">4</button><button class="scale-dot" onclick="setS(this)">5</button></div></div>
+    <div class="assess-q"><span class="q-text">Filtering allows approved AI platforms</span><div class="scale"><button class="scale-dot" onclick="setS(this)">1</button><button class="scale-dot" onclick="setS(this)">2</button><button class="scale-dot" onclick="setS(this)">3</button><button class="scale-dot" onclick="setS(this)">4</button><button class="scale-dot" onclick="setS(this)">5</button></div></div>
+    <div class="assess-q"><span class="q-text">Staff can access AI tools from home</span><div class="scale"><button class="scale-dot" onclick="setS(this)">1</button><button class="scale-dot" onclick="setS(this)">2</button><button class="scale-dot" onclick="setS(this)">3</button><button class="scale-dot" onclick="setS(this)">4</button><button class="scale-dot" onclick="setS(this)">5</button></div></div>
+  </div>
+
+  <div class="assess-cat"><div class="cat-head"><span>&#129302;</span> Technology Ecosystem</div>
+    <div class="assess-q"><span class="q-text">We are primarily a Microsoft 365 / Copilot district</span><div class="scale"><button class="scale-dot" onclick="setS(this)">1</button><button class="scale-dot" onclick="setS(this)">2</button><button class="scale-dot" onclick="setS(this)">3</button><button class="scale-dot" onclick="setS(this)">4</button><button class="scale-dot" onclick="setS(this)">5</button></div></div>
+    <div class="assess-q"><span class="q-text">We are primarily a Google Workspace / Gemini district</span><div class="scale"><button class="scale-dot" onclick="setS(this)">1</button><button class="scale-dot" onclick="setS(this)">2</button><button class="scale-dot" onclick="setS(this)">3</button><button class="scale-dot" onclick="setS(this)">4</button><button class="scale-dot" onclick="setS(this)">5</button></div></div>
+    <div class="assess-q"><span class="q-text">AI tools are accessible within our existing platform</span><div class="scale"><button class="scale-dot" onclick="setS(this)">1</button><button class="scale-dot" onclick="setS(this)">2</button><button class="scale-dot" onclick="setS(this)">3</button><button class="scale-dot" onclick="setS(this)">4</button><button class="scale-dot" onclick="setS(this)">5</button></div></div>
+    <div class="assess-q"><span class="q-text">Budget exists for AI subscriptions or tools</span><div class="scale"><button class="scale-dot" onclick="setS(this)">1</button><button class="scale-dot" onclick="setS(this)">2</button><button class="scale-dot" onclick="setS(this)">3</button><button class="scale-dot" onclick="setS(this)">4</button><button class="scale-dot" onclick="setS(this)">5</button></div></div>
+  </div>
+
+  <div class="assess-cat"><div class="cat-head"><span>&#128101;</span> Staff Readiness</div>
+    <div class="assess-q"><span class="q-text">Majority of staff have tried an AI tool</span><div class="scale"><button class="scale-dot" onclick="setS(this)">1</button><button class="scale-dot" onclick="setS(this)">2</button><button class="scale-dot" onclick="setS(this)">3</button><button class="scale-dot" onclick="setS(this)">4</button><button class="scale-dot" onclick="setS(this)">5</button></div></div>
+    <div class="assess-q"><span class="q-text">AI champions exist who could support peers</span><div class="scale"><button class="scale-dot" onclick="setS(this)">1</button><button class="scale-dot" onclick="setS(this)">2</button><button class="scale-dot" onclick="setS(this)">3</button><button class="scale-dot" onclick="setS(this)">4</button><button class="scale-dot" onclick="setS(this)">5</button></div></div>
+    <div class="assess-q"><span class="q-text">PD time allocated for AI skill building</span><div class="scale"><button class="scale-dot" onclick="setS(this)">1</button><button class="scale-dot" onclick="setS(this)">2</button><button class="scale-dot" onclick="setS(this)">3</button><button class="scale-dot" onclick="setS(this)">4</button><button class="scale-dot" onclick="setS(this)">5</button></div></div>
+  </div>
+
+  <div class="assess-cat"><div class="cat-head"><span>&#128220;</span> Policy &amp; Governance</div>
+    <div class="assess-q"><span class="q-text">AI acceptable use policy exists</span><div class="scale"><button class="scale-dot" onclick="setS(this)">1</button><button class="scale-dot" onclick="setS(this)">2</button><button class="scale-dot" onclick="setS(this)">3</button><button class="scale-dot" onclick="setS(this)">4</button><button class="scale-dot" onclick="setS(this)">5</button></div></div>
+    <div class="assess-q"><span class="q-text">Our current AI policy is supportive (not just restrictive)</span><div class="scale"><button class="scale-dot" onclick="setS(this)">1</button><button class="scale-dot" onclick="setS(this)">2</button><button class="scale-dot" onclick="setS(this)">3</button><button class="scale-dot" onclick="setS(this)">4</button><button class="scale-dot" onclick="setS(this)">5</button></div></div>
+    <div class="assess-q"><span class="q-text">Data privacy protocols for AI use are documented</span><div class="scale"><button class="scale-dot" onclick="setS(this)">1</button><button class="scale-dot" onclick="setS(this)">2</button><button class="scale-dot" onclick="setS(this)">3</button><button class="scale-dot" onclick="setS(this)">4</button><button class="scale-dot" onclick="setS(this)">5</button></div></div>
+    <div class="assess-q"><span class="q-text">Board is aware of and supports AI exploration</span><div class="scale"><button class="scale-dot" onclick="setS(this)">1</button><button class="scale-dot" onclick="setS(this)">2</button><button class="scale-dot" onclick="setS(this)">3</button><button class="scale-dot" onclick="setS(this)">4</button><button class="scale-dot" onclick="setS(this)">5</button></div></div>
+  </div>
+
+  <div class="assess-cat"><div class="cat-head"><span>&#127968;</span> Community Context</div>
+    <div class="assess-q"><span class="q-text">Community perception of AI is positive or neutral</span><div class="scale"><button class="scale-dot" onclick="setS(this)">1</button><button class="scale-dot" onclick="setS(this)">2</button><button class="scale-dot" onclick="setS(this)">3</button><button class="scale-dot" onclick="setS(this)">4</button><button class="scale-dot" onclick="setS(this)">5</button></div></div>
+    <div class="assess-q"><span class="q-text">Equity considerations for AI access are identified</span><div class="scale"><button class="scale-dot" onclick="setS(this)">1</button><button class="scale-dot" onclick="setS(this)">2</button><button class="scale-dot" onclick="setS(this)">3</button><button class="scale-dot" onclick="setS(this)">4</button><button class="scale-dot" onclick="setS(this)">5</button></div></div>
+  </div>
+
+  <div class="assess-cat"><div class="cat-head"><span>&#127942;</span> Leadership Capacity</div>
+    <div class="assess-q"><span class="q-text">Leadership team personally uses AI regularly</span><div class="scale"><button class="scale-dot" onclick="setS(this)">1</button><button class="scale-dot" onclick="setS(this)">2</button><button class="scale-dot" onclick="setS(this)">3</button><button class="scale-dot" onclick="setS(this)">4</button><button class="scale-dot" onclick="setS(this)">5</button></div></div>
+    <div class="assess-q"><span class="q-text">Clear vision for AI in our strategic direction</span><div class="scale"><button class="scale-dot" onclick="setS(this)">1</button><button class="scale-dot" onclick="setS(this)">2</button><button class="scale-dot" onclick="setS(this)">3</button><button class="scale-dot" onclick="setS(this)">4</button><button class="scale-dot" onclick="setS(this)">5</button></div></div>
+    <div class="assess-q"><span class="q-text">Change management capacity exists in our team</span><div class="scale"><button class="scale-dot" onclick="setS(this)">1</button><button class="scale-dot" onclick="setS(this)">2</button><button class="scale-dot" onclick="setS(this)">3</button><button class="scale-dot" onclick="setS(this)">4</button><button class="scale-dot" onclick="setS(this)">5</button></div></div>
+  </div>
+
+  <button class="dnd-btn" onclick="calcAssess()" style="width:100%;justify-content:center;margin-top:24px;">Calculate My Readiness Score</button>
+  <div class="assess-result" id="assessRes">
+    <div class="score" id="aScore">0</div>
+    <div class="of">out of 120 possible points</div>
+    <div class="level" id="aLevel">--</div>
+    <p style="margin-top:16px;font-size:14px;color:rgba(255,255,255,0.7);">Print or screenshot this result. Bring it to Session 1.</p>
+  </div>
+</div>
+
+<!-- ======= CLOSING: Prepare for Session 1 ======= -->
+<div class="section-hero" id="closing">
+  <img src="images/hero_nextsteps.png" alt="Educator looking forward">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Next Steps</div>
+    <h2>Preparing for <em>Session 1</em></h2>
+    <p class="lead">You&rsquo;ve completed the Educate phase. Now it&rsquo;s time to Employ and Empower.</p>
+  </div>
+</div>
+
+<div class="content-section reveal">
+  <div class="completion">
+    <h3>Module 1 Complete</h3>
+    <p>You&rsquo;ve taken the first step from tool user to AI manager. Now bring your work to life.</p>
+  </div>
+
+  <h3>Your Why</h3>
+  <p style="margin-bottom:16px;color:var(--text-secondary);">Before we meet, we want you grounded in your <em>why</em>. Why does AI matter for your students? Your staff? Your community? Our why is simple: <strong>educators who manage AI effectively close achievement gaps and free time for the work that matters most.</strong></p>
+  <div class="reflect">
+    <h4>My Why</h4>
+    <p style="font-size:15px;color:var(--text-secondary);">In 2&ndash;3 sentences, write your personal reason for joining this Academy. What do you hope to accomplish for your site, your staff, and your students?</p>
+    <textarea placeholder="My why is..."></textarea>
+  </div>
+
+  <h3 style="margin-top:40px;">What to Bring to Session 1</h3>
+  <p style="margin-bottom:16px;color:var(--text-secondary);">Session 1 is hands-on. Come prepared with these items so we can hit the ground running together.</p>
+  <div class="checklist">
+    <div class="check-item" onclick="this.classList.toggle('on')"><div class="check-box"></div><span class="check-text"><strong>Completed Site Self-Assessment</strong> &mdash; Print or bring your readiness score and notes from Lesson 6</span></div>
+    <div class="check-item" onclick="this.classList.toggle('on')"><div class="check-box"></div><span class="check-text"><strong>Your Current AI Policy</strong> &mdash; Bring your site or district&rsquo;s current AI policy (or note if none exists). We&rsquo;ll evaluate whether it&rsquo;s supportive or restrictive and discuss how to balance both.</span></div>
+    <div class="check-item" onclick="this.classList.toggle('on')"><div class="check-box"></div><span class="check-text"><strong>A Small Problem of Practice</strong> &mdash; Identify one real task or challenge you face regularly that we can work through together using Good, Better, Best prompting. Think communication drafts, data summaries, or policy documents.</span></div>
+    <div class="check-item" onclick="this.classList.toggle('on')"><div class="check-box"></div><span class="check-text"><strong>A Real Work Product</strong> &mdash; Bring a digital copy of something you&rsquo;ve created recently (memo, report, letter) that we&rsquo;ll rebuild using AI Context Assembly.</span></div>
+    <div class="check-item" onclick="this.classList.toggle('on')"><div class="check-box"></div><span class="check-text"><strong>Your End Product Vision</strong> &mdash; Think about what you&rsquo;d like to walk away from this entire institute having built. An AI integration plan? A communication framework? A staff PD series? Come with ideas.</span></div>
+    <div class="check-item" onclick="this.classList.toggle('on')"><div class="check-box"></div><span class="check-text"><strong>Access to an AI Tool</strong> &mdash; Ensure you have access to Copilot, Gemini, or ChatGPT on your device. Know your login credentials.</span></div>
+    <div class="check-item" onclick="this.classList.toggle('on')"><div class="check-box"></div><span class="check-text"><strong>Practice Good, Better, Best</strong> &mdash; Before our session, try at least one Good/Better/Best prompt sequence in your actual work. Bring what you tried and what happened.</span></div>
+  </div>
+
+  <div class="callout purple" style="margin-top:32px;">
+    <div class="callout-title">Problem of Practice &mdash; Thinking Protocol</div>
+    <p>Use these questions to identify your Problem of Practice for Session 1:</p>
+    <p style="margin-top:12px;"><strong>1. What recurring task consumes disproportionate time?</strong><br>Look at your Time &amp; Task Audit from Lesson 3. Which &ldquo;High Impact&rdquo; item would you most like to transform?</p>
+    <p style="margin-top:8px;"><strong>2. What would the ideal output look like?</strong><br>If AI could produce this perfectly, what would it include? Who would see it? What impact would it have?</p>
+    <p style="margin-top:8px;"><strong>3. What&rsquo;s the gap today?</strong><br>When you&rsquo;ve tried AI for this task, what went wrong? Generic output? Wrong tone? Missing context?</p>
+    <p style="margin-top:8px;"><strong>4. What does success look like after our session?</strong><br>If we solve this together, what will you walk away with that you can use immediately?</p>
+  </div>
+
+  <div class="callout gold" style="margin-top:24px;">
+    <div class="callout-title">What to Expect in Session 1</div>
+    <p>This is a working session &mdash; not a lecture. Together we will:</p>
+    <p style="margin-top:8px;"><strong>(1)</strong> Review your site infrastructure and AI policy landscape. <strong>(2)</strong> Practice Good, Better, Best prompting with your real work. <strong>(3)</strong> Rebuild a work product using full Context Assembly. <strong>(4)</strong> Begin shaping your AI integration plan. <strong>(5)</strong> Set your Problem of Practice trajectory for the institute.</p>
+    <p style="margin-top:12px;font-style:italic;color:var(--text-secondary);">Remember our framework: you&rsquo;ve been <strong>Educated</strong>. Now we <strong>Employ</strong> together. Then you go <strong>Empower</strong> your site.</p>
+  </div>
+</div>
+
+<div class="footer">
+  <p>CAAASA AI Academy &bull; Summer Leadership Academy 2026</p>
+  <p style="margin-top:4px;">Created by The Right Path Educational Consulting (TRPEC)</p>
+</div>
+
+</div><!-- end main -->
+
+<script>
+// NAV
+const navLinks=document.querySelectorAll('.nav-link');
+const sIds=['welcome','lesson1','lesson2','lesson3','lesson4','lesson5','lesson6','closing'];
+const visited=new Set();
+function updateNav(){
+  let cur='';const y=window.scrollY+200;
+  sIds.forEach(id=>{const el=document.getElementById(id);if(el&&el.offsetTop<=y)cur=id;});
+  navLinks.forEach(l=>{l.classList.toggle('active',l.dataset.s===cur);});
+  if(cur&&cur!=='welcome'){visited.add(cur);updateProg();}
+}
+function updateProg(){
+  const p=Math.round((visited.size/(sIds.length-1))*100);
+  document.getElementById('pFill').style.width=p+'%';
+  document.getElementById('pText').textContent=p;
+}
+window.addEventListener('scroll',updateNav);
+
+// MOBILE
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.querySelector('.overlay').classList.toggle('on');
+}
+navLinks.forEach(l=>l.addEventListener('click',()=>{if(window.innerWidth<=1024)toggleSidebar();}));
+
+// REVEAL
+const revObs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.08});
+document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
+
+// CAROUSEL
+let carIdx=0;const carTotal=8;
+function buildDots(){const d=document.getElementById('carDots');for(let i=0;i<carTotal;i++){const dot=document.createElement('div');dot.className='carousel-dot'+(i===0?' active':'');dot.onclick=()=>{carIdx=i;updateCar();};d.appendChild(dot);}}
+function moveCarousel(dir){carIdx=Math.max(0,Math.min(carTotal-1,carIdx+dir));updateCar();}
+function updateCar(){
+  document.getElementById('carTrack').style.transform='translateX(-'+carIdx*100+'%)';
+  document.querySelectorAll('.carousel-dot').forEach((d,i)=>d.classList.toggle('active',i===carIdx));
+}
+buildDots();
+
+// QUIZ
+function checkQ(id,opt,ok){
+  const q=document.getElementById(id),opts=q.querySelectorAll('.opt');
+  opts.forEach(o=>{o.classList.add('locked');o.classList.remove('selected');});
+  opt.classList.add('selected');
+  if(ok){opt.classList.add('correct');document.getElementById(id+'-ok').classList.add('ok');}
+  else{opt.classList.add('wrong');opts.forEach(o=>{if(!o.classList.contains('wrong')&&o.getAttribute('onclick').includes('true'))o.classList.add('correct');});document.getElementById(id+'-no').classList.add('no');}
+}
+
+// DND
+let dragged=null;
+document.querySelectorAll('.dnd-chip').forEach(c=>{
+  c.addEventListener('dragstart',e=>{dragged=c;e.dataTransfer.effectAllowed='move';setTimeout(()=>c.style.opacity='0.4',0);});
+  c.addEventListener('dragend',()=>{c.style.opacity='1';dragged=null;document.querySelectorAll('.dnd-zone').forEach(z=>z.classList.remove('over'));});
+});
+function doDrop(e,zone){e.preventDefault();e.currentTarget.classList.remove('over');if(dragged)e.currentTarget.querySelector('.zone-items').appendChild(dragged);}
+function checkDnd(){
+  let ok=0,tot=0;
+  document.querySelectorAll('.dnd-chip').forEach(c=>{tot++;const z=c.closest('.dnd-zone');if(!z)return;const t=z.classList.contains('lit')?'lit':'comp';if(c.dataset.a===t){c.classList.add('right');c.classList.remove('wrong');ok++;}else{c.classList.add('wrong');c.classList.remove('right');}});
+  const r=document.getElementById('dndRes');r.style.display='block';
+  if(ok===tot){r.style.background='var(--green-light)';r.style.color='#065F46';r.innerHTML='<strong>Perfect!</strong> All '+tot+' correct.';}
+  else{r.style.background='var(--gold-mist)';r.style.color='#8a6f2c';r.innerHTML='<strong>'+ok+'/'+tot+' correct.</strong> Red items are in the wrong category.';}
+}
+
+// GOOD BETTER BEST
+function showGBB(level){
+  document.querySelectorAll('.gbb-tab').forEach(t=>{t.className='gbb-tab';});
+  document.querySelectorAll('.gbb-panel').forEach(p=>{p.className='gbb-panel';});
+  const tab=document.querySelectorAll('.gbb-tab');
+  if(level==='good'){tab[0].classList.add('active-good');document.getElementById('gbbGood').className='gbb-panel show show-good';}
+  if(level==='better'){tab[1].classList.add('active-better');document.getElementById('gbbBetter').className='gbb-panel show show-better';}
+  if(level==='best'){tab[2].classList.add('active-best');document.getElementById('gbbBest').className='gbb-panel show show-best';}
+}
+
+// SCALE
+function setS(btn){
+  btn.closest('.assess-q').querySelectorAll('.scale-dot').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+}
+
+// ASSESS
+function calcAssess(){
+  let tot=0,n=0;
+  document.querySelectorAll('.scale-dot.on').forEach(b=>{tot+=parseInt(b.textContent);n++;});
+  if(n<10){alert('Please answer at least 10 questions before calculating.');return;}
+  const res=document.getElementById('assessRes');res.style.display='block';
+  document.getElementById('aScore').textContent=tot;
+  let lev='';
+  if(tot<=48)lev='Emerging \u2014 Building the Foundation';
+  else if(tot<=72)lev='Developing \u2014 Ready for Strategic Growth';
+  else if(tot<=96)lev='Implementing \u2014 Accelerating Transformation';
+  else lev='Optimizing \u2014 Leading the Way';
+  document.getElementById('aLevel').textContent=lev;
+  res.scrollIntoView({behavior:'smooth',block:'center'});
+  visited.add('lesson6');updateProg();
+}
+
+// BAR CHART ANIM
+const chartObs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.querySelectorAll('.bar-fill').forEach(b=>{setTimeout(()=>{b.style.width=b.dataset.w+'%';},200);});chartObs.unobserve(e.target);}});},{threshold:0.25});
+const ch=document.getElementById('adoptChart');if(ch)chartObs.observe(ch);
+
+updateNav();
+</script>
+</body>
+</html>
